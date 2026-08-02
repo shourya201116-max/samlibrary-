@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shift Plans - Sam Library Nagpur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { 600: '#059669', 700: '#047857' }, navy: { 900: '#0f172a' } } } } }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-chair text-lg"></i></div>
+                <span class="text-xl font-extrabold text-navy-900">SAM <span class="text-brand-600">LIBRARY</span></span>
+            </a>
+            <nav class="hidden md:flex gap-6 font-bold text-xs uppercase tracking-wider text-slate-600">
+                <a href="index.html" class="hover:text-brand-600">Home</a>
+                <a href="seats.html" class="hover:text-brand-600">50 Seats Map</a>
+                <a href="enquiry.html" class="hover:text-brand-600">Enquiry</a>
+                <a href="student-portal.html" class="hover:text-brand-600">Student Portal</a>
+                <a href="plans.html" class="text-brand-600 border-b-2 border-brand-600">Plans</a>
+                <a href="contact.html" class="hover:text-brand-600">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h1 class="text-3xl font-serif font-bold text-navy-900">Monthly Study Shift Subscriptions</h1>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-2xl font-bold text-navy-900">Half Day Pass</h3>
+                    <p class="text-4xl font-extrabold text-navy-900">₹800 <span class="text-xs text-slate-500 font-normal">/ month</span></p>
+                    <a href="seats.html" class="block w-full bg-navy-900 text-white font-bold p-3 rounded-xl text-center uppercase text-xs">Select Half Day</a>
+                </div>
+
+                <div class="bg-brand-50 rounded-3xl p-8 border-2 border-brand-500 shadow-lg space-y-4">
+                    <span class="bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Most Popular</span>
+                    <h3 class="text-2xl font-bold text-navy-900">Full Day Pass</h3>
+                    <p class="text-4xl font-extrabold text-brand-700">₹1,400 <span class="text-xs text-slate-500 font-normal">/ month</span></p>
+                    <a href="seats.html" class="block w-full bg-brand-600 text-white font-bold p-3 rounded-xl text-center uppercase text-xs">Select Full Day</a>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-2xl font-bold text-navy-900">Night Owls Plan</h3>
+                    <p class="text-4xl font-extrabold text-navy-900">₹700 <span class="text-xs text-slate-500 font-normal">/ month</span></p>
+                    <a href="seats.html" class="block w-full bg-navy-900 text-white font-bold p-3 rounded-xl text-center uppercase text-xs">Select Night Shift</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
