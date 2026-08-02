@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Portal - Sam Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { 600: '#059669', 700: '#047857' }, navy: { 900: '#0f172a' } } } } }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-chair text-lg"></i></div>
+                <span class="text-xl font-extrabold text-navy-900">SAM <span class="text-brand-600">LIBRARY</span></span>
+            </a>
+            <nav class="hidden md:flex gap-6 font-bold text-xs uppercase tracking-wider text-slate-600">
+                <a href="index.html" class="hover:text-brand-600">Home</a>
+                <a href="seats.html" class="hover:text-brand-600">50 Seats Map</a>
+                <a href="enquiry.html" class="hover:text-brand-600">Enquiry</a>
+                <a href="student-portal.html" class="text-brand-600 border-b-2 border-brand-600">Student Portal</a>
+                <a href="plans.html" class="hover:text-brand-600">Plans</a>
+                <a href="contact.html" class="hover:text-brand-600">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="max-w-md mx-auto px-4">
+            <div id="login-card" class="bg-white border border-slate-200 p-8 rounded-3xl shadow-xl space-y-6 text-center">
+                <div class="w-16 h-16 bg-brand-50 border border-brand-200 text-brand-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-navy-900">Student Login</h3>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4 text-xs text-left">
+                    <div>
+                        <label class="block font-semibold mb-1">Mobile Phone Number</label>
+                        <input id="sp-phone" type="tel" placeholder="e.g. 9021632248" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Student ID</label>
+                        <input id="sp-id" type="text" placeholder="e.g. SL-2026-1001" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold p-3.5 rounded-xl uppercase tracking-wider">Login to View Pass</button>
+                </form>
+            </div>
+
+            <!-- Dashboard / Card Preview -->
+            <div id="card-view" class="hidden bg-white p-6 rounded-3xl border-2 border-brand-500 shadow-2xl space-y-6 text-navy-900">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                    <span class="font-extrabold text-sm uppercase">SAM LIBRARY NAGPUR</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">ACTIVATED</span>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-[10px] uppercase font-bold text-slate-400">Student Name</p>
+                    <p id="disp-name" class="text-xl font-bold font-serif text-navy-900">Rahul Sharma</p>
+                    <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs mt-3">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block font-bold">SEAT NUMBER</span>
+                            <span id="disp-seat" class="font-bold text-brand-700 text-sm">Seat #01</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block font-bold">STUDENT ID</span>
+                            <span id="disp-id" class="font-mono font-bold text-navy-900">SL-2026-1001</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="window.print()" class="w-full bg-navy-900 text-white font-bold p-3 rounded-xl uppercase text-xs">Print Activation Card</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('sp-phone').value.trim();
+            const id = document.getElementById('sp-id').value.trim().toUpperCase();
+            const seats = JSON.parse(localStorage.getItem('sam_seats_data')) || [];
+
+            const matched = seats.find(s => s.bookingInfo && s.bookingInfo.phone.includes(phone) && s.bookingInfo.studentId.toUpperCase()===id);
+            if(matched) {
+                document.getElementById('login-card').classList.add('hidden');
+                document.getElementById('card-view').classList.remove('hidden');
+                document.getElementById('disp-name').innerText = matched.bookingInfo.name;
+                document.getElementById('disp-seat').innerText = `Seat #${matched.seatNum}`;
+                document.getElementById('disp-id').innerText = matched.bookingInfo.studentId;
+            } else {
+                alert("No matching registration found!");
+            }
+        }
+    </script>
+</body>
+</html>
+
