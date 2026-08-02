@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Enquiry - Sam Library Nagpur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { 600: '#059669' }, navy: { 900: '#0f172a' }, amberGold: { 600: '#b45309' } } } } }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-chair text-lg"></i></div>
+                <span class="text-xl font-extrabold text-navy-900">SAM <span class="text-brand-600">LIBRARY</span></span>
+            </a>
+            <nav class="hidden md:flex gap-6 font-bold text-xs uppercase tracking-wider text-slate-600">
+                <a href="index.html" class="hover:text-brand-600">Home</a>
+                <a href="seats.html" class="hover:text-brand-600">50 Seats Map</a>
+                <a href="enquiry.html" class="text-amberGold-600 border-b-2 border-amberGold-600">Enquiry</a>
+                <a href="student-portal.html" class="hover:text-brand-600">Student Portal</a>
+                <a href="plans.html" class="hover:text-brand-600">Plans</a>
+                <a href="contact.html" class="hover:text-brand-600">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="max-w-3xl mx-auto px-4">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 space-y-6">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-bold uppercase text-amberGold-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Admission Query</span>
+                    <h1 class="text-3xl font-serif font-bold text-navy-900">Student & Parent Enquiry Form</h1>
+                </div>
+
+                <form onsubmit="submitEnquiry(event)" class="space-y-4 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Student Full Name *</label>
+                            <input id="eq-name" type="text" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Mobile Number *</label>
+                            <input id="eq-phone" type="tel" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Target Exam / Course *</label>
+                        <select id="eq-exam" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
+                            <option>UPSC / MPSC Civil Services</option>
+                            <option>NEET / JEE Medical & Engineering</option>
+                            <option>CA / CS / Commerce</option>
+                            <option>Banking & Government Exams</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Question / Notes</label>
+                        <textarea id="eq-msg" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3" placeholder="Tell us your queries..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-amberGold-600 hover:bg-amberGold-500 text-white font-bold p-3.5 rounded-xl uppercase tracking-wider">Submit Enquiry</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function submitEnquiry(e) {
+            e.preventDefault();
+            const name = document.getElementById('eq-name').value;
+            const phone = document.getElementById('eq-phone').value;
+            const exam = document.getElementById('eq-exam').value;
+            const msg = document.getElementById('eq-msg').value;
+
+            const list = JSON.parse(localStorage.getItem('sam_enquiries_data')) || [];
+            list.unshift({ id: Date.now(), date: new Date().toLocaleDateString(), name, phone, exam, shift: 'Full Day Pass', message: msg });
+            localStorage.setItem('sam_enquiries_data', JSON.stringify(list));
+
+            alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
+
