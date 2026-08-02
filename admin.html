@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Control Center - Sam Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { 600: '#059669', 700: '#047857' }, navy: { 900: '#0f172a' } } } } }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-user-shield text-lg"></i></div>
+                <span class="text-xl font-extrabold text-navy-900">ADMIN <span class="text-brand-600">PORTAL</span></span>
+            </a>
+            <a href="index.html" class="text-xs font-bold text-slate-600 hover:text-brand-600">Back to Website &rarr;</a>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="max-w-7xl mx-auto px-4 space-y-8">
+            
+            <!-- Login Gate -->
+            <div id="gate" class="max-w-md mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl space-y-4 text-center">
+                <h3 class="text-2xl font-serif font-bold text-navy-900">Admin Authentication</h3>
+                <input id="pass" type="password" placeholder="Enter Passcode (admin123)" class="w-full border border-slate-200 rounded-xl p-3 text-center text-xs">
+                <button onclick="unlock()" class="w-full bg-navy-900 text-white font-bold p-3 rounded-xl uppercase text-xs">Unlock Panel</button>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="panel" class="hidden space-y-8">
+                
+                <!-- Hero Image Controller -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="font-bold text-navy-900 text-base"><i class="fa-solid fa-image text-brand-600 mr-2"></i> Update Home Hero Photo</h3>
+                    <div class="flex flex-col sm:flex-row gap-3 text-xs">
+                        <input id="adm-img-url" type="url" placeholder="Paste Image URL..." class="flex-grow bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <input id="adm-img-caption" type="text" placeholder="Caption label..." class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <button onclick="updateHeroPhoto()" class="bg-brand-600 text-white font-bold px-6 py-3 rounded-xl uppercase">Apply Photo</button>
+                    </div>
+                </div>
+
+                <!-- Student Enquiry Log -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="font-bold text-navy-900 text-base"><i class="fa-solid fa-list-check text-amber-600 mr-2"></i> Student Enquiries Log</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 text-slate-500 uppercase">
+                                <tr><th class="p-3">Name</th><th class="p-3">Phone</th><th class="p-3">Exam</th><th class="p-3">Action</th></tr>
+                            </thead>
+                            <tbody id="enq-tbody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function unlock() {
+            if(document.getElementById('pass').value === 'admin123') {
+                document.getElementById('gate').classList.add('hidden');
+                document.getElementById('panel').classList.remove('hidden');
+                renderEnquiries();
+            } else alert('Invalid passcode!');
+        }
+
+        function updateHeroPhoto() {
+            const url = document.getElementById('adm-img-url').value;
+            const cap = document.getElementById('adm-img-caption').value;
+            if(url) localStorage.setItem('sam_hero_photo', url);
+            if(cap) localStorage.setItem('sam_hero_caption', cap);
+            alert('Home Page Photo Updated!');
+        }
+
+        function renderEnquiries() {
+            const list = JSON.parse(localStorage.getItem('sam_enquiries_data')) || [];
+            const tb = document.getElementById('enq-tbody');
+            tb.innerHTML = '';
+            if(list.length===0) { tb.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No enquiries found.</td></tr>`; return; }
+            list.forEach(e => {
+                tb.innerHTML += `<tr>
+                    <td class="p-3 font-bold">${e.name}</td>
+                    <td class="p-3 font-mono">${e.phone}</td>
+                    <td class="p-3">${e.exam}</td>
+                    <td class="p-3"><button onclick="alert('Congratulations SMS sent to ${e.phone}!');" class="bg-brand-600 text-white font-bold px-2.5 py-1 rounded text-[10px]">Approve & Send SMS</button></td>
+                </tr>`;
+            });
+        }
+    </script>
+</body>
+</html>
+
