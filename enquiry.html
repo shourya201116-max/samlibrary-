@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +67,6 @@
         </div>
     </main>
 
-    <!-- Firebase App & Firestore SDKs -->
     <script type="module">
         import { db } from './firebase-config.js';
         import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -78,6 +77,11 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            if (!db) {
+                alert("Database is not connected. Please check firebase-config.js.");
+                return;
+            }
+
             const name = document.getElementById('eq-name').value.trim();
             const phone = document.getElementById('eq-phone').value.trim();
             const exam = document.getElementById('eq-exam').value;
@@ -87,7 +91,6 @@
             submitBtn.textContent = 'Submitting...';
 
             try {
-                // 1. Save to Firebase Firestore Database
                 await addDoc(collection(db, "enquiries"), {
                     name: name,
                     phone: phone,
@@ -98,23 +101,10 @@
                     date: new Date().toLocaleDateString()
                 });
 
-                // 2. Also keep a local copy for fallback
-                const list = JSON.parse(localStorage.getItem('sam_enquiries_data')) || [];
-                list.unshift({ 
-                    id: Date.now(), 
-                    date: new Date().toLocaleDateString(), 
-                    name, 
-                    phone, 
-                    exam, 
-                    shift: 'Full Day Pass', 
-                    message: msg 
-                });
-                localStorage.setItem('sam_enquiries_data', JSON.stringify(list));
-
                 alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
                 window.location.href = 'index.html';
             } catch (error) {
-                console.error("Error submitting enquiry to Firebase:", error);
+                console.error("Error submitting enquiry:", error);
                 alert("Failed to submit enquiry online: " + error.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Enquiry';
