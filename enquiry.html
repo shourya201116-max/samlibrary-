@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -37,7 +37,7 @@
                     <h1 class="text-3xl font-serif font-bold text-navy-900">Student & Parent Enquiry Form</h1>
                 </div>
 
-                <form onsubmit="submitEnquiry(event)" class="space-y-4 text-xs">
+                <form id="enquiryForm" class="space-y-4 text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold mb-1">Student Full Name *</label>
@@ -51,69 +51,75 @@
                     <div>
                         <label class="block font-semibold mb-1">Target Exam / Course *</label>
                         <select id="eq-exam" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3">
-                            <option>UPSC / MPSC Civil Services</option>
-                            <option>NEET / JEE Medical & Engineering</option>
-                            <option>CA / CS / Commerce</option>
-                            <option>Banking & Government Exams</option>
+                            <option value="UPSC / MPSC Civil Services">UPSC / MPSC Civil Services</option>
+                            <option value="NEET / JEE Medical & Engineering">NEET / JEE Medical & Engineering</option>
+                            <option value="CA / CS / Commerce">CA / CS / Commerce</option>
+                            <option value="Banking & Government Exams">Banking & Government Exams</option>
                         </select>
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Question / Notes</label>
                         <textarea id="eq-msg" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3" placeholder="Tell us your queries..."></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-amberGold-600 hover:bg-amberGold-500 text-white font-bold p-3.5 rounded-xl uppercase tracking-wider">Submit Enquiry</button>
+                    <button type="submit" id="submitBtn" class="w-full bg-amberGold-600 hover:bg-amberGold-500 text-white font-bold p-3.5 rounded-xl uppercase tracking-wider transition-colors">Submit Enquiry</button>
                 </form>
             </div>
         </div>
     </main>
 
-    <script>
-        function submitEnquiry(e) {
-            e.preventDefault();
-            const name = document.getElementById('eq-name').value;
-            const phone = document.getElementById('eq-phone').value;
-            const exam = document.getElementById('eq-exam').value;
-            const msg = document.getElementById('eq-msg').value;
-
-            const list = JSON.parse(localStorage.getItem('sam_enquiries_data')) || [];
-            list.unshift({ id: Date.now(), date: new Date().toLocaleDateString(), name, phone, exam, shift: 'Full Day Pass', message: msg });
-            localStorage.setItem('sam_enquiries_data', JSON.stringify(list));
-
-            alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
-            window.location.href = 'index.html';
-        }
-    </script>
+    <!-- Firebase App & Firestore SDKs -->
     <script type="module">
-    import { db } from './firebase-config.js';
-    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";
+        import { db } from './firebase-config.js';
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    window.submitEnquiry = async function(e) {
-        e.preventDefault();
-        
-        const name = document.getElementById('eq-name').value;
-        const phone = document.getElementById('eq-phone').value;
-        const exam = document.getElementById('eq-exam').value;
-        const msg = document.getElementById('eq-msg').value;
+        const form = document.getElementById('enquiryForm');
+        const submitBtn = document.getElementById('submitBtn');
 
-        try {
-            await addDoc(collection(db, "enquiries"), {
-                name: name,
-                phone: phone,
-                exam: exam,
-                message: msg,
-                shift: 'Full Day Pass',
-                createdAt: serverTimestamp()
-            });
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
-            window.location.href = 'index.html';
-        } catch (error) {
-            console.error("Error submitting enquiry: ", error);
-            alert("Submission failed. Please try again.");
-        }
-    };
+            const name = document.getElementById('eq-name').value.trim();
+            const phone = document.getElementById('eq-phone').value.trim();
+            const exam = document.getElementById('eq-exam').value;
+            const msg = document.getElementById('eq-msg').value.trim();
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                // 1. Save to Firebase Firestore Database
+                await addDoc(collection(db, "enquiries"), {
+                    name: name,
+                    phone: phone,
+                    exam: exam,
+                    message: msg,
+                    shift: 'Full Day Pass',
+                    createdAt: serverTimestamp(),
+                    date: new Date().toLocaleDateString()
+                });
+
+                // 2. Also keep a local copy for fallback
+                const list = JSON.parse(localStorage.getItem('sam_enquiries_data')) || [];
+                list.unshift({ 
+                    id: Date.now(), 
+                    date: new Date().toLocaleDateString(), 
+                    name, 
+                    phone, 
+                    exam, 
+                    shift: 'Full Day Pass', 
+                    message: msg 
+                });
+                localStorage.setItem('sam_enquiries_data', JSON.stringify(list));
+
+                alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Error submitting enquiry to Firebase:", error);
+                alert("Failed to submit enquiry online: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Enquiry';
+            }
+        });
     </script>
-    
 </body>
 </html>
-
