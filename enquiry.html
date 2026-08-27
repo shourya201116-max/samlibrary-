@@ -83,6 +83,37 @@
             window.location.href = 'index.html';
         }
     </script>
+    <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";
+
+    window.submitEnquiry = async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('eq-name').value;
+        const phone = document.getElementById('eq-phone').value;
+        const exam = document.getElementById('eq-exam').value;
+        const msg = document.getElementById('eq-msg').value;
+
+        try {
+            await addDoc(collection(db, "enquiries"), {
+                name: name,
+                phone: phone,
+                exam: exam,
+                message: msg,
+                shift: 'Full Day Pass',
+                createdAt: serverTimestamp()
+            });
+
+            alert(`Thank you ${name}! Your enquiry has been sent to Sam Library Admin.`);
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error("Error submitting enquiry: ", error);
+            alert("Submission failed. Please try again.");
+        }
+    };
+    </script>
+    
 </body>
 </html>
 
